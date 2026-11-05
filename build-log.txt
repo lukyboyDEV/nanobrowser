@@ -1,0 +1,167 @@
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated @npmcli/move-file@2.0.1: This functionality has been moved to @npmcli/fs
+npm warn deprecated npmlog@6.0.2: This package is no longer supported.
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@8.1.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated are-we-there-yet@3.0.1: This package is no longer supported.
+npm warn deprecated boolean@3.2.0: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+npm warn deprecated gauge@4.0.4: This package is no longer supported.
+npm warn deprecated tar@6.2.1: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+
+added 517 packages, and audited 518 packages in 1m
+
+100 packages are looking for funding
+  run `npm fund` for details
+
+21 vulnerabilities (4 moderate, 14 high, 3 critical)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+npm warn install-scripts   electron@33.4.11 (postinstall: node install.js)
+npm warn install-scripts   node-llama-cpp@3.22.2 (postinstall: node ./dist/cli/cli.js postinstall)
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+
+> nano@1.0.0 dist
+> electron-builder
+
+  • electron-builder  version=25.1.8 os=10.0.19045
+  • loaded configuration  file=package.json ("build" field)
+  • executing @electron/rebuild  electronVersion=33.4.11 arch=x64 buildFromSource=false appDir=./
+  • installing native dependencies  arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=33.4.11 appOutDir=dist\win-unpacked
+  • updating asar integrity executable resource  executablePath=dist\win-unpacked\Nano.exe
+  • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z size=5.6 MB parts=1
+  • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z duration=1.838s
+  ⨯ cannot execute  cause=exit status 2
+                    out=
+    7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+    
+    Scanning the drive for archives:
+    1 file, 5635384 bytes (5504 KiB)
+    
+    Extracting archive: C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\445504251.7z
+    --
+    Path = C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\445504251.7z
+    Type = 7z
+    Physical Size = 5635384
+    Headers Size = 1492
+    Method = LZMA2:24m LZMA:20 BCJ2
+    Solid = +
+    Blocks = 2
+    
+    
+    Sub items Errors: 2
+    
+    Archives with Errors: 1
+    
+    Sub items Errors: 2
+    
+                    errorOut=ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\445504251\darwin\10.12\lib\libcrypto.dylib
+    ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\445504251\darwin\10.12\lib\libssl.dylib
+    
+                    command='D:\DOWNLOADS GOOGLE\nano-neura (3)\node_modules\7zip-bin\win\x64\7za.exe' x -snld -bd 'C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\445504251.7z' '-oC:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\445504251'
+                    workingDir=C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign
+  • Above command failed, retrying 3 more times
+  • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z size=5.6 MB parts=1
+  • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z duration=1.386s
+  ⨯ cannot execute  cause=exit status 2
+                    out=
+    7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+    
+    Scanning the drive for archives:
+    1 file, 5635384 bytes (5504 KiB)
+    
+    Extracting archive: C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\141972703.7z
+    --
+    Path = C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\141972703.7z
+    Type = 7z
+    Physical Size = 5635384
+    Headers Size = 1492
+    Method = LZMA2:24m LZMA:20 BCJ2
+    Solid = +
+    Blocks = 2
+    
+    
+    Sub items Errors: 2
+    
+    Archives with Errors: 1
+    
+    Sub items Errors: 2
+    
+                    errorOut=ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\141972703\darwin\10.12\lib\libcrypto.dylib
+    ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\141972703\darwin\10.12\lib\libssl.dylib
+    
+                    command='D:\DOWNLOADS GOOGLE\nano-neura (3)\node_modules\7zip-bin\win\x64\7za.exe' x -snld -bd 'C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\141972703.7z' '-oC:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\141972703'
+                    workingDir=C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign
+  • Above command failed, retrying 3 more times
+  • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z size=5.6 MB parts=1
+  • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z duration=1.331s
+  ⨯ cannot execute  cause=exit status 2
+                    out=
+    7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+    
+    Scanning the drive for archives:
+    1 file, 5635384 bytes (5504 KiB)
+    
+    Extracting archive: C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\645000919.7z
+    --
+    Path = C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\645000919.7z
+    Type = 7z
+    Physical Size = 5635384
+    Headers Size = 1492
+    Method = LZMA2:24m LZMA:20 BCJ2
+    Solid = +
+    Blocks = 2
+    
+    
+    Sub items Errors: 2
+    
+    Archives with Errors: 1
+    
+    Sub items Errors: 2
+    
+                    errorOut=ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\645000919\darwin\10.12\lib\libcrypto.dylib
+    ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\645000919\darwin\10.12\lib\libssl.dylib
+    
+                    command='D:\DOWNLOADS GOOGLE\nano-neura (3)\node_modules\7zip-bin\win\x64\7za.exe' x -snld -bd 'C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\645000919.7z' '-oC:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\645000919'
+                    workingDir=C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign
+  • Above command failed, retrying 3 more times
+  • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z size=5.6 MB parts=1
+  • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z duration=1.409s
+  ⨯ cannot execute  cause=exit status 2
+                    out=
+    7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+    
+    Scanning the drive for archives:
+    1 file, 5635384 bytes (5504 KiB)
+    
+    Extracting archive: C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\162191831.7z
+    --
+    Path = C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\162191831.7z
+    Type = 7z
+    Physical Size = 5635384
+    Headers Size = 1492
+    Method = LZMA2:24m LZMA:20 BCJ2
+    Solid = +
+    Blocks = 2
+    
+    
+    Sub items Errors: 2
+    
+    Archives with Errors: 1
+    
+    Sub items Errors: 2
+    
+                    errorOut=ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\162191831\darwin\10.12\lib\libcrypto.dylib
+    ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\162191831\darwin\10.12\lib\libssl.dylib
+    
+                    command='D:\DOWNLOADS GOOGLE\nano-neura (3)\node_modules\7zip-bin\win\x64\7za.exe' x -snld -bd 'C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\162191831.7z' '-oC:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign\162191831'
+                    workingDir=C:\Users\lucas\AppData\Local\electron-builder\Cache\winCodeSign
+  • Above command failed, retrying 3 more times

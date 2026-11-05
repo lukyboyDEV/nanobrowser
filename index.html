@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Nano</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="tabbar">
+    <img id="logo" src="logo.png" alt="Nano">
+    <div id="tabs"></div>
+    <button id="newtab" title="New tab (Ctrl+T)">+</button>
+  </div>
+  <div id="toolbar">
+    <button id="menu" title="Sidebar">☰</button>
+    <button id="back" title="Back">←</button>
+    <button id="forward" title="Forward">→</button>
+    <button id="reload" title="Reload (Ctrl+R)">⟳</button>
+    <input id="url" placeholder="Search or enter address" spellcheck="false">
+    <select id="engine" title="Search engine">
+      <option value="nano">Nano Seek</option>
+      <option value="google">Google</option>
+      <option value="duckduckgo">DuckDuckGo</option>
+      <option value="bing">Bing</option>
+      <option value="brave">Brave</option>
+    </select>
+  </div>
+  <aside id="side"><div id="sidein">
+    <nav id="nav"><button data-p="account" title="Account">👤</button><button data-p="history" title="History">🕘</button><button data-p="bookmarks" title="Bookmarks">★</button><button data-p="settings" title="Settings">⚙</button><i id="ind"></i></nav>
+    <section class="panel" id="p-account"></section>
+    <section class="panel" id="p-history"><input id="hq" class="field" placeholder="Search history"><div id="hlist" class="list"></div><button id="hclear" class="btn ghost">Clear history</button></section>
+    <section class="panel" id="p-bookmarks"><button id="badd" class="btn">★ Bookmark this page</button><div id="blist" class="list"></div></section>
+    <section class="panel" id="p-settings"><h3>Search engine</h3><select id="engine2" class="field"><option value="nano">Nano Seek</option><option value="google">Google</option><option value="duckduckgo">DuckDuckGo</option><option value="bing">Bing</option><option value="brave">Brave</option></select><h3>Shortcuts</h3><p class="muted">Ctrl+T new tab<br>Ctrl+W close tab<br>Ctrl+L address bar<br>Ctrl+R / F5 reload<br>Ctrl+1-9 jump to tab<br>Alt+← / → back / forward</p><div class="brand"><img src="logo.png" alt=""><div><b>Nano</b><span>By VANTA</span></div></div></section>
+  </div></aside>
+  <script src="renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Nano AI</title>
+<style>
+:root { --red: #ff1a0f; --bg: #0a0a0a; --line: #1f1f1f; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: #eee; overflow: hidden; font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.bg { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.orb { position: absolute; border-radius: 50%; filter: blur(100px); }
+.o1 { width: 480px; height: 480px; background: #b00800; left: -160px; top: -200px; opacity: .35; animation: d1 18s ease-in-out infinite alternate; }
+.o2 { width: 420px; height: 420px; background: #ff1a0f; right: -180px; bottom: -200px; opacity: .2; animation: d2 22s ease-in-out infinite alternate; }
+@keyframes d1 { to { transform: translate(160px, 100px); } }
+@keyframes d2 { to { transform: translate(-160px, -80px); } }
+
+#app { position: relative; height: 100%; display: flex; flex-direction: column; }
+header { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--line); background: rgba(10,10,10,.8); backdrop-filter: blur(12px); }
+header img { width: 32px; height: 32px; border-radius: 9px; }
+header h1 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
+header h1 em { font-style: normal; color: var(--red); }
+header .tag { margin-left: 2px; padding: 2px 8px; border-radius: 99px; border: 1px solid rgba(255,26,15,.35); background: rgba(255,26,15,.1); color: #ff8a82; font-size: 11px; font-weight: 600; }
+header .sp { flex: 1; }
+.ghost { padding: 6px 12px; border-radius: 99px; border: 1px solid #2a2a2a; background: transparent; color: #aaa; font: inherit; font-size: 13px; cursor: pointer; transition: .15s; }
+.ghost:hover { color: #fff; border-color: var(--red); background: rgba(255,26,15,.1); }
+
+#scroll { flex: 1; overflow-y: auto; padding: 24px 24px 12px; scroll-behavior: smooth; }
+#scroll::-webkit-scrollbar { width: 10px; } #scroll::-webkit-scrollbar-thumb { background: #222; border-radius: 6px; border: 3px solid var(--bg); }
+#log { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+
+.empty { margin: 9vh auto 0; max-width: 560px; text-align: center; animation: rise .7s both; }
+.empty img { width: 76px; height: 76px; border-radius: 22px; box-shadow: 0 0 0 1px rgba(255,26,15,.25), 0 18px 50px rgba(255,26,15,.35); animation: float 5s ease-in-out infinite; }
+.empty h2 { margin: 18px 0 6px; font-size: 30px; letter-spacing: -.02em; } .empty h2 em { font-style: normal; color: var(--red); }
+.empty p { margin: 0 0 22px; color: #8c8c8c; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.chip { padding: 8px 14px; border-radius: 99px; border: 1px solid #2a2a2a; background: rgba(255,255,255,.04); color: #ccc; font: inherit; font-size: 13px; cursor: pointer; transition: .2s; }
+.chip:hover { border-color: var(--red); background: rgba(255,26,15,.1); color: #fff; transform: translateY(-2px); }
+@keyframes float { 50% { transform: translateY(-6px); } }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+
+.msg { display: flex; gap: 12px; animation: rise .35s cubic-bezier(.2,.8,.2,1) both; }
+.msg.user { justify-content: flex-end; }
+.av { flex: none; width: 30px; height: 30px; border-radius: 9px; margin-top: 2px; }
+.bub { max-width: calc(100% - 44px); }
+.user .bub { max-width: 80%; padding: 10px 16px; border-radius: 18px 18px 4px 18px; background: linear-gradient(160deg, #c4150c, #8f0f08); color: #fff; white-space: pre-wrap; word-break: break-word; }
+.bot .bub { padding-top: 3px; }
+.bot p { margin: 0 0 10px; animation: rise .4s both; word-break: break-word; }
+.bot p:last-of-type { margin-bottom: 4px; }
+.note { color: #777; font-size: 11px; margin-top: 4px; }
+.srcs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.srcs a { display: inline-flex; align-items: center; gap: 6px; max-width: 250px; padding: 4px 10px 4px 5px; border-radius: 99px; border: 1px solid #262626; background: #121212; color: #bbb; font-size: 12px; text-decoration: none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: .15s; }
+.srcs a:hover { border-color: var(--red); color: #fff; }
+.srcs a b { flex: none; display: grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; background: rgba(255,26,15,.28); color: #ffb3ad; font-size: 10px; }
+.cite { display: inline-grid; place-items: center; min-width: 17px; height: 17px; margin: 0 1px; padding: 0 4px; border-radius: 9px; background: rgba(255,26,15,.25); color: #ffb3ad; font-size: 10px; font-weight: 700; text-decoration: none; vertical-align: 2px; transition: .15s; }
+.cite:hover { background: var(--red); color: #fff; }
+.think { display: inline-flex; align-items: center; gap: 10px; color: #888; font-size: 13px; }
+.dots { display: inline-flex; gap: 4px; } .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: bl 1.1s infinite; } .dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes bl { 0%, 80%, 100% { opacity: .2; transform: scale(.7); } 40% { opacity: 1; transform: scale(1); } }
+
+footer { padding: 6px 24px 16px; }
+#form { position: relative; max-width: 760px; margin: 0 auto; display: flex; align-items: flex-end; gap: 10px; padding: 8px 8px 8px 20px; border-radius: 26px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px); transition: border-color .2s, box-shadow .2s; }
+#form:focus-within { border-color: var(--red); box-shadow: 0 0 0 4px rgba(255,26,15,.16), 0 12px 40px rgba(255,26,15,.14); }
+#in { flex: 1; max-height: 140px; padding: 8px 0; border: 0; outline: 0; resize: none; background: transparent; color: #fff; font: inherit; line-height: 1.45; }
+#in::placeholder { color: #7a7a7a; }
+#send { flex: none; width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: #fff; background: var(--red); transition: transform .15s, opacity .15s, box-shadow .2s; }
+#send:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 0 20px rgba(255,26,15,.5); }
+#send:disabled { opacity: .35; cursor: default; }
+#send svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.fine { max-width: 760px; margin: 8px auto 0; text-align: center; color: #555; font-size: 11px; }
+#model{padding:6px 10px;border-radius:99px;border:1px solid #2a2a2a;background:#141414;color:#ddd;font:inherit;font-size:13px}
+#acct{color:#888;font-size:12px}#dlbtn{display:none;border-color:var(--red);color:#fff}
+#memp{display:none;position:absolute;right:24px;top:58px;width:340px;max-height:60vh;overflow:auto;z-index:9;padding:14px;border-radius:16px;background:#141414;border:1px solid #2a2a2a;box-shadow:0 20px 60px #000}
+#memp h3{margin:0 0 4px;font-size:14px}#memp p{margin:0 0 10px;color:#888;font-size:12px}#memp form{display:flex;gap:6px;margin-bottom:10px}
+#memp input{flex:1;padding:7px 10px;border-radius:10px;border:1px solid #2a2a2a;background:#0b0b0b;color:#fff;font:inherit;font-size:13px}
+.mi{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid #222;font-size:13px}.mi span{flex:1}.mi button{border:0;background:none;color:#888;cursor:pointer}
+#log .bub pre{margin:8px 0;padding:12px;border-radius:10px;background:#0a0a0a;border:1px solid #262626;overflow:auto;font:12.5px/1.5 ui-monospace,Consolas,monospace}
+#log .bub code{font-family:ui-monospace,Consolas,monospace;background:#1b1b1b;padding:1px 5px;border-radius:5px;font-size:.92em}#log .bub pre code{background:none;padding:0}
+#log .bub ul,#log .bub ol{margin:6px 0;padding-left:22px}#log .bub h4{margin:10px 0 4px}.cp{margin-top:6px;border:0;background:none;color:#777;font-size:12px;cursor:pointer}.cp:hover{color:#fff}
+#send.stop{opacity:1}
+</style>
+</head>
+<body>
+<div class="bg"><span class="orb o1"></span><span class="orb o2"></span></div>
+<div id="app">
+  <header>
+    <img src="logo.png" alt="Nano"><h1><em>Nano</em> AI</h1><span class="tag">on-device AI</span><span class="sp"></span>
+    <span id="acct"></span>
+    <select id="model" title="Choose AI model"></select><button class="ghost" id="dlbtn" type="button"></button>
+    <button class="ghost" id="memb" type="button">Memory</button>
+    <button class="ghost" id="clear" type="button">New chat</button>
+  </header>
+  <div id="memp"><h3>Memory</h3><p id="memnote"></p><form id="memf"><input id="memi" maxlength="300" placeholder="e.g. I'm a student, keep answers short"><button class="ghost">Add</button></form><div id="meml"></div></div>
+  <div id="scroll"><div id="log"></div></div>
+  <footer>
+    <form id="form" autocomplete="off">
+      <textarea id="in" rows="1" placeholder="Ask Nano AI anything" spellcheck="false" autofocus></textarea>
+      <button id="send" type="submit" aria-label="Send" disabled><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+    </form>
+    <div class="fine">Runs on your device · AI can make mistakes · Tip: say "remember that ..." · By VANTA</div>
+  </footer>
+</div>
+<script>
+const $ = id => document.getElementById(id), api = window.nano;
+const log = $('log'), input = $('in'), send = $('send'), scroller = $('scroll');
+const mk = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+const safe = u => /^https?:\/\//i.test(u) ? u : '#';
+const store = { get() { try { return JSON.parse(localStorage.getItem('nano-brain-chat') || 'null'); } catch { return null; } }, set(v) { try { localStorage.setItem('nano-brain-chat', JSON.stringify(v)); } catch {} } };
+let state = { msgs: [], prev: '' }, busy = false;
+let info = null, dling = null;
+async function refresh() {
+  if (!api || !api.aiInfo) return; info = await api.aiInfo(); if (!info) return;
+  $('acct').textContent = info.user ? 'Signed in as ' + info.user : 'Guest (sign in to keep memory on your account)';
+  const sel = $('model'); sel.textContent = '';
+  info.models.forEach(m => { const o = mk('option', '', m.name + ' - ' + m.note + (m.installed ? '' : ' (' + (m.mb / 1000).toFixed(1) + ' GB download)')); o.value = m.id; sel.append(o); });
+  const so = mk('option', '', 'Nano AI (search, no download)'); so.value = 'search'; sel.append(so); sel.value = info.model;
+  const m = info.models.find(x => x.id === info.model), b = $('dlbtn');
+  b.style.display = m && !m.installed ? '' : 'none'; b.disabled = !!dling; b.textContent = dling ? 'Downloading ' + dling + '%' : 'Download ' + (m ? m.name : '');
+  $('memnote').textContent = info.user ? 'Saved to your Nano account. The AI uses this in every chat.' : 'Sign in to the browser to keep memory on your account.';
+  const l = $('meml'); l.textContent = ''; info.memory.forEach(x => { const r = mk('div', 'mi'), d = mk('button', '', '\u2715'); d.onclick = async () => { await api.memDel(x.id); refresh(); }; r.append(mk('span', '', x.text), d); l.append(r); });
+}
+$('model').onchange = async e => { await api.aiModel(e.target.value); refresh(); };
+$('dlbtn').onclick = async () => { dling = 0; refresh(); await api.aiDownload(info.model); dling = null; refresh(); };
+if (api && api.onProgress) api.onProgress(d => { dling = Math.round(d.f * 100); $('dlbtn').textContent = 'Downloading ' + dling + '%'; });
+$('memb').onclick = () => { const p = $('memp'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; };
+$('memf').onsubmit = async e => { e.preventDefault(); const v = $('memi').value.trim(); if (!v) return; $('memi').value = ''; await api.memAdd(v); refresh(); };
+refresh();
+const SUGGEST = ['What can you do?', 'How tall is Mount Everest?', 'Who invented the telephone?', 'Why is the sky blue?', 'What is 15% of 240?'];
+
+function rich(el, text, sources) {
+  const inl = (p, s) => s.split(/(`[^`]+`|\*\*[^*]+\*\*)/).forEach(x => { if (!x) return; if (x[0] === '`' && x.length > 2) p.append(mk('code', '', x.slice(1, -1))); else if (x.startsWith('**') && x.length > 4) p.append(mk('b', '', x.slice(2, -2))); else inline(p, x, sources); });
+  text.split(/```[^\n]*\n?/).forEach((seg, i) => {
+    if (i % 2) { const pre = mk('pre'); pre.append(mk('code', '', seg.replace(/\n$/, ''))); el.append(pre); return; }
+    let list = null, kind = '';
+    seg.split('\n').map(l => l.trimEnd()).forEach(l => {
+      const b = l.match(/^\s*(?:([-*])|(\d+)[.)])\s+(.*)/);
+      if (b) { const k = b[1] ? 'ul' : 'ol'; if (!list || kind !== k) { list = mk(k); kind = k; el.append(list); } const li = mk('li'); inl(li, b[3]); list.append(li); return; }
+      list = null; if (!l.trim()) return;
+      const h = l.match(/^#{1,4}\s+(.*)/); if (h) { const e = mk('h4'); inl(e, h[1]); el.append(e); return; }
+      const p = mk('p'); inl(p, l.trim()); el.append(p);
+    });
+  });
+}
+const toBottom = () => { scroller.scrollTop = scroller.scrollHeight; };
+function empty() {
+  const d = mk('div', 'empty'); d.id = 'empty';
+  const im = mk('img'); im.src = 'logo.png'; im.alt = '';
+  const h = mk('h2'); h.append('Chat with ', Object.assign(mk('em'), { textContent: 'Nano AI' }));
+  const chips = mk('div', 'chips');
+  SUGGEST.forEach(s => { const b = mk('button', 'chip', s); b.type = 'button'; b.onclick = () => ask(s); chips.append(b); });
+  d.append(im, h, mk('p', '', "Nano's own on-device AI. Pick a model at the top."), chips);
+  log.append(d);
+}
+function inline(el, text, sources) {
+  text.split(/(\[\d+\])/).forEach(p => {
+    const c = p.match(/^\[(\d+)\]$/);
+    if (c) { const s = sources && sources[c[1] - 1]; if (s) { const a = mk('a', 'cite', c[1]); a.href = safe(s.url); a.target = '_blank'; a.title = s.title; el.append(a); } }
+    else if (p) el.append(document.createTextNode(p));
+  });
+}
+function addUser(text) { const m = mk('div', 'msg user'); m.append(mk('div', 'bub', text)); log.append(m); toBottom(); }
+function botBody(text, sources, provider, local) {
+  const b = mk('div', 'bub');
+  rich(b, text, sources);
+  const used = [...new Set((text.match(/\[(\d+)\]/g) || []).map(x => +x.slice(1, -1)))].filter(n => sources && sources[n - 1]);
+  if (used.length) {
+    const row = mk('div', 'srcs');
+    used.forEach(n => { const s = sources[n - 1], a = mk('a'); a.href = safe(s.url); a.target = '_blank'; a.title = s.title; a.append(mk('b', '', n), document.createTextNode(s.host || s.title)); row.append(a); });
+    b.append(row);
+  }
+  if (provider && !local) b.append(mk('div', 'note', provider));
+  const cp = mk('button', 'cp', 'Copy'); cp.type = 'button'; cp.onclick = () => { try { navigator.clipboard.writeText(text); cp.textContent = 'Copied'; setTimeout(() => cp.textContent = 'Copy', 1200); } catch {} }; b.append(cp);
+  return b;
+}
+function addBot(text, sources, provider, local) {
+  const m = mk('div', 'msg bot'), av = mk('img', 'av'); av.src = 'logo.png'; av.alt = '';
+  m.append(av, botBody(text, sources, provider, local)); log.append(m); toBottom(); return m;
+}
+function thinking(llm) {
+  const m = mk('div', 'msg bot'), av = mk('img', 'av'), b = mk('div', 'bub'), t = mk('div', 'think'), d = mk('span', 'dots'), s = mk('span', '', 'Searching the web');
+  av.src = 'logo.png'; av.alt = ''; d.innerHTML = '<i></i><i></i><i></i>'; t.append(d, s); b.append(t); m.append(av, b); log.append(m); toBottom();
+  const steps = ['Searching the web', 'Reading the best pages', 'Writing an answer'];
+  if (llm) { s.textContent = 'Thinking'; return () => m.remove(); }
+  let i = 0; const iv = setInterval(() => { i = Math.min(i + 1, steps.length - 1); s.textContent = steps[i]; }, 1800);
+  return () => { clearInterval(iv); m.remove(); };
+}
+const save = () => store.set({ msgs: state.msgs.slice(-40), prev: state.prev });
+
+let live = null, acc = '', stopThink = null;
+if (api && api.onToken) api.onToken(c => {
+  acc += c;
+  if (!live) { if (stopThink) { stopThink(); stopThink = null; } live = addBot('', null, null, true); }
+  const b = live.querySelector('.bub'); b.textContent = ''; rich(b, acc, null); toBottom();
+});
+send.addEventListener('click', e => { if (busy) { e.preventDefault(); api.stop(); } });
+async function ask(text) {
+  text = String(text || '').trim(); if (!text || busy) return;
+  busy = true; send.disabled = false; send.title = 'Stop';
+  const e = $('empty'); if (e) e.remove();
+  addUser(text); input.value = ''; fit();
+  state.msgs.push({ role: 'user', text });
+  const stop0 = thinking(info && info.model !== 'search'), t0 = Date.now();
+  let r = null; live = null; acc = ''; stopThink = stop0;
+  try { r = api ? await api.chat({ text, prev: state.prev, hist: state.msgs.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', text: m.text })) }) : null; } catch {}
+  await new Promise(res => setTimeout(res, Math.max(0, 450 - (Date.now() - t0))));
+  stopThink = null; stop0(); if (live) { live.remove(); live = null; }
+  if (!r || !r.text) r = { text: api ? 'Something went wrong while answering. Please try again.' : 'Open this page inside the Nano browser to chat with Nano AI.', provider: 'Nano AI', local: true };
+  if (r.query != null) state.prev = r.query;
+  state.msgs.push({ role: 'bot', text: r.text, sources: r.sources, provider: r.provider, local: r.local });
+  addBot(r.text, r.sources, r.provider, r.local);
+  if (r.mem) refresh();
+  save(); busy = false; send.disabled = !input.value.trim(); send.title = 'Send'; input.focus();
+}
+function fit() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 140) + 'px'; send.disabled = !busy && !input.value.trim(); }
+input.addEventListener('input', fit);
+input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); ask(input.value); } });
+$('form').addEventListener('submit', e => { e.preventDefault(); ask(input.value); });
+$('clear').onclick = () => { if (busy) return; state = { msgs: [], prev: '' }; save(); log.textContent = ''; empty(); input.focus(); };
+
+(function init() {
+  const s = store.get(); if (s && Array.isArray(s.msgs) && s.msgs.length) {
+    state = { msgs: s.msgs.slice(-40), prev: String(s.prev || '') };
+    state.msgs.forEach(m => m.role === 'user' ? addUser(String(m.text)) : addBot(String(m.text), m.sources, m.provider, m.local));
+    scroller.style.scrollBehavior = 'auto'; toBottom(); scroller.style.scrollBehavior = '';
+  } else empty();
+  const q = (new URLSearchParams(location.search).get('q') || '').trim();
+  if (q) ask(q); else input.focus();
+})();
+</script>
+</body>
+</html>

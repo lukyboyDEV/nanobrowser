@@ -1,0 +1,119 @@
+{
+  "name": "nano",
+  "productName": "Nano",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "description": "Nano \u2013 a fast, private browser with Nano Seek search. By VANTA.",
+  "author": {
+    "name": "VANTA"
+  },
+  "build": {
+    "appId": "com.vanta.nano",
+    "productName": "Nano",
+    "icon": "icon.png",
+    "files": [
+      "main.js",
+      "preload.js",
+      "preload-start.js",
+      "index.html",
+      "start.html",
+      "renderer.js",
+      "styles.css",
+      "logo.png",
+      "icon.png",
+      "results.html",
+      "chat.html",
+      "search.js",
+      "brain.js",
+      "llm.js",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "icon": "icon.ico",
+      "target": [
+        "nsis"
+      ],
+      "publisherName": "VANTA"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "Nano-Setup.${ext}",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "installerHeaderIcon": "icon.ico",
+      "installerSidebar": "sidebar.bmp",
+      "uninstallerSidebar": "sidebar.bmp",
+      "shortcutName": "Nano",
+      "deleteAppDataOnUninstall": false,
+      "include": "installer.nsh"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": null,
+      "category": "public.app-category.productivity",
+      "artifactName": "Nano.${ext}",
+      "extendInfo": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLName": "Web site URL",
+            "CFBundleURLSchemes": [
+              "http",
+              "https"
+            ]
+          }
+        ],
+        "CFBundleDocumentTypes": [
+          {
+            "CFBundleTypeName": "HTML document",
+            "CFBundleTypeRole": "Viewer",
+            "LSItemContentTypes": [
+              "public.html"
+            ]
+          }
+        ]
+      }
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Network",
+      "artifactName": "Nano.${ext}",
+      "maintainer": "VANTA",
+      "synopsis": "Nano browser",
+      "desktop": {
+        "entry": {
+          "MimeType": "x-scheme-handler/http;x-scheme-handler/https;text/html;application/xhtml+xml",
+          "Categories": "Network;WebBrowser;"
+        }
+      },
+      "executableName": "nano"
+    },
+    "copyright": "Copyright \u00a9 2026 VANTA",
+    "asarUnpack": [
+      "node_modules/node-llama-cpp/**",
+      "node_modules/@node-llama-cpp/**"
+    ]
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "node-llama-cpp": "^3.3.0"
+  }
+}

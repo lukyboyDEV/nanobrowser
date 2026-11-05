@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Nano Seek</title>
+<style>
+:root { --red: #ff1a0f; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #0a0a0a; color: #eee; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+body::before { content: ""; position: fixed; width: 520px; height: 520px; left: -160px; top: -200px; border-radius: 50%; background: #b00800; filter: blur(110px); opacity: .35; pointer-events: none; }
+header { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px; padding: 14px 28px; background: rgba(10,10,10,.85); backdrop-filter: blur(12px); border-bottom: 1px solid #1c1c1c; }
+header img { width: 34px; height: 34px; border-radius: 10px; }
+.ai h2 img { width: 18px; height: 18px; border-radius: 5px; }
+.by { margin: 40px 0 0 4px; color: #555; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+form { position: relative; flex: 1; max-width: 680px; }
+#q { width: 100%; height: 44px; padding: 0 20px; border-radius: 22px; border: 1px solid #2a2a2a; background: #141414; color: #fff; font: inherit; outline: none; transition: border-color .2s, box-shadow .2s; }
+#q:focus { border-color: var(--red); box-shadow: 0 0 0 4px rgba(255,26,15,.18); }
+main { position: relative; max-width: 760px; margin: 0 0 60px 28px; padding-top: 18px; }
+.meta { color: #777; font-size: 12px; margin: 0 0 14px 4px; }
+.ai { position: relative; padding: 18px 20px; margin-bottom: 22px; border-radius: 18px; background: linear-gradient(160deg, rgba(255,26,15,.1), rgba(255,255,255,.03)); border: 1px solid rgba(255,26,15,.28); animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
+.ai h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 13px; font-weight: 650; color: #ff6a60; letter-spacing: .03em; }
+.ai h2 i { width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 10px var(--red); }
+.ai p { margin: 0 0 10px; animation: rise .5s both; }
+.ai ul { margin: 0 0 10px; padding-left: 20px; }
+.ai .src { margin: 6px 0 0; color: #777; font-size: 11px; }
+.cite { display: inline-grid; place-items: center; min-width: 17px; height: 17px; margin: 0 1px; padding: 0 4px; border-radius: 9px; background: rgba(255,26,15,.25); color: #ffb3ad; font-size: 10px; font-weight: 700; text-decoration: none; vertical-align: 2px; transition: background .15s; }
+.cite:hover { background: var(--red); color: #fff; }
+.sk { height: 12px; margin: 9px 0; border-radius: 6px; background: linear-gradient(90deg, #1c1c1c 25%, #2c2c2c 50%, #1c1c1c 75%); background-size: 200% 100%; animation: sh 1.2s linear infinite; }
+@keyframes sh { to { background-position: -200% 0; } }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+.card { display: flex; gap: 14px; padding: 14px; margin-bottom: 22px; border-radius: 16px; background: #131313; border: 1px solid #222; animation: rise .5s both; }
+.card img { width: 96px; height: 96px; object-fit: cover; border-radius: 12px; }
+.card h3 { margin: 0 0 4px; font-size: 17px; }
+.card p { margin: 0 0 6px; color: #bbb; font-size: 14px; }
+.r { padding: 10px 4px; margin-bottom: 6px; animation: rise .45s calc(var(--i) * 40ms) both; }
+.r .h { color: #7d7d7d; font-size: 12px; }
+.r a.t { display: block; margin: 2px 0 3px; color: #ff7a70; font-size: 18px; text-decoration: none; }
+.r a.t:hover { text-decoration: underline; }
+.r p { margin: 0; color: #b5b5b5; font-size: 14px; }
+a { color: inherit; }
+.card a.m { color: #ff7a70; font-size: 13px; text-decoration: none; }
+.none { padding: 40px 0; color: #888; }
+.chatgo { display: inline-block; margin-top: 10px; padding: 6px 14px; border-radius: 99px; border: 1px solid rgba(255,26,15,.4); color: #ff8a82; font-size: 13px; text-decoration: none; transition: .15s; }
+.chatgo:hover { background: rgba(255,26,15,.18); color: #fff; }
+</style>
+</head>
+<body>
+<header><img src="logo.png" alt="Nano Seek"><form id="f"><input id="q" autocomplete="off" spellcheck="false" placeholder="Search Nano Seek"></form></header>
+<main>
+  <p class="meta" id="meta">Searching…</p>
+  <section class="ai" id="ai"><h2><img src="logo.png" alt="">NANO SEEK AI OVERVIEW</h2><div id="aib"><div class="sk" style="width:95%"></div><div class="sk" style="width:80%"></div><div class="sk" style="width:60%"></div></div></section>
+  <div id="card"></div>
+  <div id="list"></div>
+  <p class="by">Nano Seek · By VANTA</p>
+</main>
+<script>
+const $ = id => document.getElementById(id), api = window.nano;
+const q = (new URLSearchParams(location.search).get('q') || '').trim();
+document.title = q + ' – Nano Seek'; $('q').value = q;
+$('f').onsubmit = e => { e.preventDefault(); const v = $('q').value.trim(); if (v) api.search(v); };
+const mk = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+const safe = u => /^https?:\/\//i.test(u) ? u : '#';
+
+function inline(el, text, results) {
+  text.split(/(\*\*[^*]+\*\*|\[\d+\])/).forEach(p => {
+    if (!p) return;
+    const c = p.match(/^\[(\d+)\]$/);
+    if (c) { const r = results[c[1] - 1]; if (r) { const a = mk('a', 'cite', c[1]); a.href = safe(r.url); a.title = r.title; el.append(a); } }
+    else if (p.startsWith('**')) el.append(mk('b', '', p.slice(2, -2)));
+    else el.append(document.createTextNode(p));
+  });
+}
+function renderAI(box, text, results, provider) {
+  box.textContent = '';
+  let ul = null, n = 0;
+  text.replace(/^#+\s*/gm, '').split('\n').map(l => l.trim()).filter(Boolean).forEach(l => {
+    const li = l.match(/^[-*•]\s+(.*)/);
+    let el;
+    if (li) { if (!ul) { ul = mk('ul'); box.append(ul); } el = mk('li'); inline(el, li[1], results); ul.append(el); return; }
+    ul = null; el = mk('p'); el.style.animationDelay = (n++ * 90) + 'ms'; inline(el, l, results); box.append(el);
+  });
+  const self = /built-in/.test(provider);
+  box.append(mk('div', 'src', self ? 'From Nano · built-in knowledge' : 'Written by ' + provider + ' from the sources above · nothing leaves your device except page loads'));
+  const go = mk('a', 'chatgo', 'Ask Nano AI a follow-up →'); go.href = '#'; go.onclick = e => { e.preventDefault(); api.open('chat', q); }; box.append(go);
+}
+
+(async () => {
+  if (!q) { $('meta').textContent = ''; $('ai').remove(); return; }
+  const d = await api.web(q).catch(() => null);
+  if (!d || !d.results.length) {
+    $('ai').remove(); $('meta').textContent = '';
+    $('list').append(mk('div', 'none', 'No results. Check your internet connection and try again.')); return;
+  }
+  $('meta').textContent = d.results.length + ' results · ' + (d.ms / 1000).toFixed(2) + 's · via ' + d.engines.join(', ');
+  if (d.card) {
+    const c = mk('div', 'card'), t = mk('div');
+    if (d.card.thumb) { const im = mk('img'); im.src = d.card.thumb; im.alt = ''; c.append(im); }
+    const a = mk('a', 'm', 'Wikipedia →'); a.href = safe(d.card.url);
+    t.append(mk('h3', '', d.card.title), mk('p', '', d.card.snippet), a); c.append(t); $('card').append(c);
+  }
+  d.results.forEach((r, i) => {
+    const row = mk('div', 'r'), a = mk('a', 't', r.title);
+    row.style.setProperty('--i', Math.min(i, 12)); a.href = safe(r.url);
+    row.append(mk('div', 'h', r.host), a);
+    if (r.snippet) row.append(mk('p', '', r.snippet));
+    $('list').append(row);
+  });
+  const ai = await api.ai({ q, results: d.results.slice(0, 6), card: d.card }).catch(() => null);
+  if (ai && ai.text) renderAI($('aib'), ai.text, d.results, ai.provider); else $('ai').remove();
+})();
+</script>
+</body>
+</html>
